@@ -1,0 +1,11 @@
+{
+	"name": "frc-sim",
+	"version": "1.0.0",
+	"description": "Simulates generic FRC games",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Aryan",
+	"license": "ISC"
+}
