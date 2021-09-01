@@ -443,14 +443,34 @@ class GameField {
 		else return 0;
 	}
 
+	endgame() {
+		this.robots.forEach((robot) => {
+			if (robot.escapeBuilding) robot.points += 20;
+		});
+	}
+
 	/**
 	 * Outputs the specified values in format to the console
+	 * @param color the color of the alliance ("red" | "blue")
 	 */
-	output() {
-		console.log(`game length: ${this.timeLimit / 10} seconds`);
+	output(color) {
+		var out = {
+			allianceColor: color,
+			totalGameTime: this.timeLimit / 10,
+			secondsGained: 0,
+			secondsGiven: 0,
+			points: 0,
+			robots: [],
+		};
 		this.robots.forEach((robot) => {
-			console.log(robot.printable());
+			out.secondsGained += robot.seconds;
+			out.secondsGiven += robot.oppSeconds;
+			out.points += robot.points;
+			out.robots.push(robot.printable());
 		});
+
+		console.log(out);
+		return out;
 	}
 }
 
@@ -472,8 +492,18 @@ class GameController {
 			if (!bluStop) bluStop = this.bluSide.step();
 		}
 
-		this.redSide.output();
-		this.bluSide.output();
+		this.redSide.endgame();
+		this.bluSide.endgame();
+
+		console.log("{\nred: ");
+		var redData = this.redSide.output("Red");
+		console.log(",\nblue: ");
+		var bluData = this.bluSide.output("Blue");
+		console.log("}");
+
+		if (redData.points > bluData.points) console.log("Red Wins!");
+		else if (bluData.points > redData.points) console.log("Blue Wins!");
+		else console.log("Somehow there is a tie");
 	}
 }
 
